@@ -35,7 +35,9 @@ namespace HALOSDecoder
 
         public byte[] Decrypt(byte[] data)
         {
-            return Cipher.DoFinal(data);
+            byte[] pText = Cipher.DoFinal(data);
+            Cipher.Reset();
+            return pText;
         }
     }
 }
