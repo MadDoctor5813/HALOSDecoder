@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CastleCipher.cs" />
+    <Compile Include="DataLoader.cs" />
     <Compile Include="DecryptResult.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="MassDecrypter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
