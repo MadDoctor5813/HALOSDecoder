@@ -30,7 +30,41 @@ namespace HALOSDecoder
             LoadKeys();
             LoadIvs();
             LoadPads();
-            BeginSearch();
+            using (StreamWriter fullLogWriter = new StreamWriter(new FileStream("log_full.txt", FileMode.Create, FileAccess.Write)))
+            using (StreamWriter logWriter = new StreamWriter(new FileStream("log.txt", FileMode.Create, FileAccess.Write)))
+            {
+                fullLogWriter.WriteLine("Beginning decryption for raw data");
+                logWriter.WriteLine("Beginning decryption for raw data");
+                BeginDecryption(halosData, fullLogWriter, logWriter);
+                fullLogWriter.WriteLine("Beginning decryption for xor pads");
+                logWriter.WriteLine("Beginning decryption for xor pads");
+                for (int i = 0; i < pads.Count; i++)
+                {
+                    fullLogWriter.WriteLine($"Using pad {i + 1}");
+                    logWriter.WriteLine($"Using pad {i + 1}");
+                    byte[] pad = pads[i];
+                    byte[] xorPad = new byte[halosData.Length];
+                    for (int j = 0; j < xorPad.Length; j++)
+                    {
+                        xorPad[j] = (byte)(pad[j] ^ halosData[j]);
+                    }
+                    BeginDecryption(xorPad, fullLogWriter, logWriter);
+                }
+                fullLogWriter.WriteLine("Beginning decryption for modular add pads");
+                logWriter.WriteLine("Beginning decryption for modular add pads");
+                for (int i = 0; i < pads.Count; i++)
+                {
+                    fullLogWriter.WriteLine($"Using pad {i + 1}");
+                    logWriter.WriteLine($"Using pad {i + 1}");
+                    byte[] pad = pads[i];
+                    byte[] xorPad = new byte[halosData.Length];
+                    for (int j = 0; j < xorPad.Length; j++)
+                    {
+                        xorPad[j] = (byte)((pad[j] + halosData[j]) % 256);
+                    }
+                    BeginDecryption(xorPad, fullLogWriter, logWriter);
+                }
+            }
         }
 
         private void LoadPads()
@@ -55,41 +89,40 @@ namespace HALOSDecoder
             }
         }
 
-        private void BeginSearch()
+        private void BeginDecryption(byte[] data, StreamWriter fullLogWriter, StreamWriter logWriter)
         {
-            using (StreamWriter fullLogWriter = new StreamWriter(new FileStream("log_full.txt", FileMode.Create, FileAccess.Write)))
-            using (StreamWriter logWriter = new StreamWriter(new FileStream("log.txt", FileMode.Create, FileAccess.Write)))
+
+            fullLogWriter.WriteLine("Starting ECB search");
+            logWriter.WriteLine("Starting ECB search");
+            foreach (IBlockCipher algo in algos)
             {
-                fullLogWriter.WriteLine("Starting ECB search");
-                foreach (IBlockCipher algo in algos)
+                CastleCipher cipher = new CastleCipher(algo);
+                foreach (byte[] key in keys)
                 {
-                    CastleCipher cipher = new CastleCipher(algo);
-                    foreach (byte[] key in keys)
+                    cipher.InitEcb(key);
+                    DecryptResult result = cipher.Decrypt(halosData);
+                    result.WriteToFile(fullLogWriter);
+                    if (result.DistinctBytes < 180)
                     {
-                        cipher.InitEcb(key);
-                        DecryptResult result = cipher.Decrypt(halosData);
+                        result.WriteToFile(logWriter);
+                    }
+                }
+            }
+            fullLogWriter.WriteLine("Starting CBC search");
+            logWriter.WriteLine("Starting CBC search");
+            foreach (IBlockCipher algo in algos)
+            {
+                CastleCipher cipher = new CastleCipher(algo);
+                foreach (byte[] key in keys)
+                {
+                    foreach (byte[] iv in ivs)
+                    {
+                        cipher.InitCbc(key, iv);
+                        DecryptResult result = cipher.Decrypt(data);
                         result.WriteToFile(fullLogWriter);
                         if (result.DistinctBytes < 180)
                         {
                             result.WriteToFile(logWriter);
-                        }
-                    }
-                }
-                fullLogWriter.WriteLine("Starting CBC search");
-                foreach (IBlockCipher algo in algos)
-                {
-                    CastleCipher cipher = new CastleCipher(algo);
-                    foreach (byte[] key in keys)
-                    {
-                        foreach (byte[] iv in ivs)
-                        {
-                            cipher.InitCbc(key, iv);
-                            DecryptResult result = cipher.Decrypt(halosData);
-                            result.WriteToFile(fullLogWriter);
-                            if (result.DistinctBytes < 180)
-                            {
-                                result.WriteToFile(logWriter);
-                            }
                         }
                     }
                 }
