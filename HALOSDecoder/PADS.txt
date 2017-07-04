@@ -1,10 +1,2 @@
-﻿ALL PADS MUST BE 376 BYTES LONG, THE PROGRAM WILL YELL AT YOU OTHERWISE
-YOU CAN HAVE NEWLINES, SPACES, AND PUNCTUATION IN THE PADS TOO
-JUST SEPARATE WITH A POUND SIGN. IF YOU NEED A POUND SIGN IN THE PAD,
-GOD HELP YOU
-BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA
-BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA
-BLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLA
-#
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac scelerisque est. Nulla sollicitudin ante id lacus molestie, eu tristique nibh fringilla. Proin mattis orci nec tempus bibendum. Pellentesque aliquam neque eget lobortis tristique. Sed hendrerit id odio sit amet placerat. Donec lorem risus, condimentum id augue eget, aliquet blandit turpis. Quisque volutpat. 
-#
+﻿ALLPADSMUSTBE376BYTESLONGTHEPROGRAMWILLYELLATYOUOTHERWISEBLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLABLAB
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultricies est felis, nec cursus orci egestas ut. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean sagittis lectus in ullamcorper vulputate. Vestibulum facilisis cursus tortor. In aliquam mattis magna, laoreet posuere dui aliquam dapibus. Sed congue in urna metus.

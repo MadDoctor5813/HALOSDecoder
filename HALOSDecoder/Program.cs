@@ -15,6 +15,7 @@ namespace HALOSDecoder
         byte[] halosData;
         List<byte[]> keys;
         List<byte[]> ivs;
+        List<byte[]> pads;
 
         private IBlockCipher[] algos = { new AesEngine(), new RijndaelEngine(), new TwofishEngine(), new SerpentEngine() };
 
@@ -28,7 +29,30 @@ namespace HALOSDecoder
             LoadHalosData();
             LoadKeys();
             LoadIvs();
+            LoadPads();
             BeginSearch();
+        }
+
+        private void LoadPads()
+        {
+            pads = new List<byte[]>();
+            using (StreamReader reader = new StreamReader(new FileStream("PADS.txt", FileMode.Open, FileAccess.Read)))
+            {
+                int idx = 0;
+                while (!reader.EndOfStream)
+                { 
+                    byte[] padBytes = Encoding.ASCII.GetBytes(reader.ReadLine());
+                    if (padBytes.Length != 376)
+                    {
+                        Console.WriteLine($"Pad {idx + 1} is of invalid length. Skipping...");
+                    }
+                    else
+                    {
+                        pads.Add(padBytes);
+                    }
+                    idx++;
+                }
+            }
         }
 
         private void BeginSearch()
