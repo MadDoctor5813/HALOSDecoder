@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CascadeDecrypter.cs" />
     <Compile Include="CastleCipher.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="DecryptResult.cs" />
