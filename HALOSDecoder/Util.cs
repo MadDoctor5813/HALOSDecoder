@@ -15,7 +15,8 @@ namespace HALOSDecoder
             {"AES", new int[] { 16, 24, 32 } },
             {"Rijndael", new int[] { 16, 20, 24, 28, 32 } },
             {"Twofish", new int[] { 16, 24, 32 } },
-            {"Serpent", new int[] {16, 24, 32} }
+            {"Serpent", new int[] {16, 24, 32} },
+            {"DESede", new int[] {14, 21 } }
         };
 
         public static bool IsKeyValid(IBlockCipher engine, byte[] key)

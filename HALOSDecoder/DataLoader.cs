@@ -1,6 +1,7 @@
 ﻿using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace HALOSDecoder
         private static List<byte[]> ivs { get; set; }
         public static List<byte[]> pads { get; set; }
 
-        public static IBlockCipher[] algos = { new AesEngine(), new RijndaelEngine(), new TwofishEngine(), new SerpentEngine() };
+        public static IBlockCipher[] algos = { new AesEngine(), new RijndaelEngine(), new TwofishEngine(), new SerpentEngine(), new DesEdeEngine() };
 
         static DataLoader()
         {
@@ -33,7 +34,15 @@ namespace HALOSDecoder
             {
                 if (Util.IsKeyValid(algo, key))
                 {
-                    yield return key;
+                    //DES keys need to have parity bits added to them
+                    if (algo.AlgorithmName == "DESede")
+                    {
+                        yield return AddDesParity(key);
+                    }
+                    else
+                    {
+                        yield return key;
+                    }
                 }
             }
         }
@@ -47,6 +56,44 @@ namespace HALOSDecoder
                     yield return iv;
                 }
             }
+        }
+
+        private static byte[] AddDesParity(byte[] key)
+        {
+            //split into 7 bit chunks
+            BitArray[] chunks = new BitArray[key.Length / 7];
+            for (int i = 0; i < key.Length / 7; i++)
+            {
+                chunks[i] = new BitArray(key.Skip(i * 7).Take(7).ToArray());
+            }
+            int convertedLen = 0;
+            if (key.Length == 14)
+            {
+                convertedLen = 16 * 8;
+            }
+            else
+            {
+                convertedLen = 24 * 8;
+            }
+            BitArray converted = new BitArray(convertedLen);
+            for (int i = 0; i < chunks.Length; i++)
+            {
+                BitArray chunk = chunks[i];
+                int paritySum = 0;
+                for (int j = 0; j < 7; j++)
+                {
+                    converted[(i * 7) + j] = chunk[i];
+                    if (chunk[i] == true)
+                    {
+                        paritySum++;
+                    }
+                }
+                //the parity bit is 1 if the number of 1's is odd
+                converted[(i * 7) + 7] = paritySum % 2 == 1;
+            }
+            byte[] bytesWithParity = new byte[convertedLen / 8];
+            converted.CopyTo(bytesWithParity, 0);
+            return bytesWithParity;
         }
 
         private static void LoadHalosData()

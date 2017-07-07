@@ -7,3 +7,9 @@ benaloh paillier
 LASEROPTRONICLINEARINDUCERCANNON
 laseroptroniclinearinducercannon
 LaserOptronicLinearInducerCannon
+HALOS:BenalohPaillier
+HALOS:benalohpaillier
+HALOS:BENALOHPAILLIER
+HALOSBenallohPaillier
+HALOSbenallohPaillier
+HALOSBENALLOHPAILLIER
