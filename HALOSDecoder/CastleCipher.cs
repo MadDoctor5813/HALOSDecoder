@@ -40,6 +40,14 @@ namespace HALOSDecoder
             Cipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
         }
 
+        public void InitCtr(byte[] key, byte[] iv)
+        {
+            this.key = key;
+            this.iv = iv;
+            Cipher = new BufferedBlockCipher(new SicBlockCipher(Engine));
+            Cipher.Init(false, new ParametersWithIV(new KeyParameter(key), iv));
+        }
+
         public DecryptResult Decrypt(byte[] data)
         {
             //pad data to block size boundary
