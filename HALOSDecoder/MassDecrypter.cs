@@ -85,7 +85,7 @@ namespace HALOSDecoder
                 {
                     foreach (byte[] iv in DataLoader.ivs)
                     {
-                        cipher.InitCbc(key, iv);
+                        cipher.InitCtr(key, iv);
                         DecryptResult result = cipher.Decrypt(data);
                         Logger.Log(result);
                     }
