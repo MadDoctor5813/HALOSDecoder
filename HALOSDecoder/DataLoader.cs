@@ -61,39 +61,43 @@ namespace HALOSDecoder
         private static byte[] AddDesParity(byte[] key)
         {
             //split into 7 bit chunks
-            BitArray[] chunks = new BitArray[key.Length / 7];
-            for (int i = 0; i < key.Length / 7; i++)
+            BitArray keyBits = new BitArray(key);
+            BitArray[] chunks = new BitArray[keyBits.Length / 7];
+            for (int i = 0; i < chunks.Length; i++)
             {
-                chunks[i] = new BitArray(key.Skip(i * 7).Take(7).ToArray());
+                chunks[i] = new BitArray(7);
+                for (int j = 0; j < 7; j++)
+                {
+                    chunks[i][j] = keyBits[(i * 7) + j];
+                }
             }
             int convertedLen = 0;
             if (key.Length == 14)
             {
-                convertedLen = 16 * 8;
+                convertedLen = 16;
             }
             else
             {
-                convertedLen = 24 * 8;
+                convertedLen = 24;
             }
-            BitArray converted = new BitArray(convertedLen);
+            byte[] converted = new byte[convertedLen];
             for (int i = 0; i < chunks.Length; i++)
             {
-                BitArray chunk = chunks[i];
+                BitArray chunkWithParity = new BitArray(8);
                 int paritySum = 0;
                 for (int j = 0; j < 7; j++)
                 {
-                    converted[(i * 7) + j] = chunk[i];
-                    if (chunk[i] == true)
+                    if (chunks[i][j] == true)
                     {
                         paritySum++;
                     }
+                    chunkWithParity[j] = chunks[i][j];
                 }
-                //the parity bit is 1 if the number of 1's is odd
-                converted[(i * 7) + 7] = paritySum % 2 == 1;
+                chunkWithParity[7] = (paritySum % 2 == 0);
+                chunkWithParity.CopyTo(converted, i);
             }
-            byte[] bytesWithParity = new byte[convertedLen / 8];
-            converted.CopyTo(bytesWithParity, 0);
-            return bytesWithParity;
+            return converted;
+            
         }
 
         private static void LoadHalosData()
