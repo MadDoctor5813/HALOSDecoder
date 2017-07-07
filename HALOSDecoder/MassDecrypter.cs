@@ -56,7 +56,7 @@ namespace HALOSDecoder
             foreach (IBlockCipher algo in DataLoader.algos)
             {
                 CastleCipher cipher = new CastleCipher(algo);
-                foreach (byte[] key in DataLoader.keys)
+                foreach (byte[] key in DataLoader.GetValidKeys(algo))
                 {
                     cipher.InitEcb(key);
                     DecryptResult result = cipher.Decrypt(DataLoader.halosData);
@@ -67,9 +67,9 @@ namespace HALOSDecoder
             foreach (IBlockCipher algo in DataLoader.algos)
             {
                 CastleCipher cipher = new CastleCipher(algo);
-                foreach (byte[] key in DataLoader.keys)
+                foreach (byte[] key in DataLoader.GetValidKeys(algo))
                 {
-                    foreach (byte[] iv in DataLoader.ivs)
+                    foreach (byte[] iv in DataLoader.GetValidIvs(algo))
                     {
                         cipher.InitCbc(key, iv);
                         DecryptResult result = cipher.Decrypt(data);
@@ -81,9 +81,9 @@ namespace HALOSDecoder
             foreach (IBlockCipher algo in DataLoader.algos)
             {
                 CastleCipher cipher = new CastleCipher(algo);
-                foreach (byte[] key in DataLoader.keys)
+                foreach (byte[] key in DataLoader.GetValidKeys(algo))
                 {
-                    foreach (byte[] iv in DataLoader.ivs)
+                    foreach (byte[] iv in DataLoader.GetValidIvs(algo))
                     {
                         cipher.InitCtr(key, iv);
                         DecryptResult result = cipher.Decrypt(data);

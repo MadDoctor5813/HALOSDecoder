@@ -24,7 +24,9 @@ namespace HALOSDecoder
             CastleCipher serpent = new CastleCipher(new SerpentEngine());
             CastleCipher twofish = new CastleCipher(new TwofishEngine());
             CastleCipher aes = new CastleCipher(new AesEngine());
-            foreach (byte[] key in DataLoader.keys)
+            //We can safely just ask for AES-compatible keys here, because we're using the same keys and ivs for each algorithm anyway.
+            //If the given key or iv won't work for AES, the whole thing won't work anyway
+            foreach (byte[] key in DataLoader.GetValidKeys(aes.Engine))
             {
                 serpent.InitEcb(key);
                 twofish.InitEcb(key);
@@ -35,9 +37,9 @@ namespace HALOSDecoder
                 Logger.Log(final);
             }
             Logger.Log("Beginning CBC cascade...", LogLevel.Important);
-            foreach (byte[] key in DataLoader.keys)
+            foreach (byte[] key in DataLoader.GetValidKeys(aes.Engine))
             {
-                foreach (byte[] iv in DataLoader.ivs)
+                foreach (byte[] iv in DataLoader.GetValidIvs(aes.Engine))
                 {
                     serpent.InitCbc(key, iv);
                     twofish.InitCbc(key, iv);
@@ -49,9 +51,9 @@ namespace HALOSDecoder
                 }
             }
             Logger.Log("Beginning CTR cascade...", LogLevel.Important);
-            foreach (byte[] key in DataLoader.keys)
+            foreach (byte[] key in DataLoader.GetValidKeys(aes.Engine))
             {
-                foreach (byte[] iv in DataLoader.ivs)
+                foreach (byte[] iv in DataLoader.GetValidIvs(aes.Engine))
                 {
                     serpent.InitCtr(key, iv);
                     twofish.InitCtr(key, iv);

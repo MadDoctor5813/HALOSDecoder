@@ -13,8 +13,8 @@ namespace HALOSDecoder
     {
 
         public static byte[] halosData { get; set; }
-        public static List<byte[]> keys { get; set; }
-        public static List<byte[]> ivs { get; set; }
+        private static List<byte[]> keys { get; set; }
+        private static List<byte[]> ivs { get; set; }
         public static List<byte[]> pads { get; set; }
 
         public static IBlockCipher[] algos = { new AesEngine(), new RijndaelEngine(), new TwofishEngine(), new SerpentEngine() };
@@ -25,6 +25,28 @@ namespace HALOSDecoder
             LoadKeys();
             LoadIvs();
             LoadPads();
+        }
+
+        public static IEnumerable<byte[]> GetValidKeys(IBlockCipher algo)
+        {
+            foreach (byte[] key in keys)
+            {
+                if (Util.IsKeyValid(algo, key))
+                {
+                    yield return key;
+                }
+            }
+        }
+
+        public static IEnumerable<byte[]> GetValidIvs(IBlockCipher algo)
+        {
+            foreach (byte[] iv in ivs)
+            {
+                if (Util.IsIvValid(algo, iv))
+                {
+                    yield return iv;
+                }
+            }
         }
 
         private static void LoadHalosData()
