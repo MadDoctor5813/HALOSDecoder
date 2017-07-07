@@ -18,6 +18,8 @@ namespace HALOSDecoder
             CascadeDecrypter cascade = new CascadeDecrypter();
             cascade.CascadeDecrypt();
             Console.WriteLine($"Cascade decrypt logs written to {cascade.Logger.FullLogPath} and {cascade.Logger.LogPath}.");
+            Console.WriteLine("Press any key to quit...");
+            Console.ReadKey(true);
         }
 
     }
