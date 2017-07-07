@@ -8,23 +8,16 @@ namespace HALOSDecoder
 {
     class Program
     {
-
-        const string fullLogPath = "decrypt_log_full.txt";
-        const string logPath = "decrypt_log.txt";
-
-        const string fullCascadeLogPath = "cascade_log_full.txt";
-        const string cascadeLogPath = "cascade_log.txt";
-
         public static void Main(string[] args)
         {
             Console.WriteLine("Starting mass decryption...");
             MassDecrypter decrypter = new MassDecrypter();
-            decrypter.MassDecrypt(fullLogPath, logPath);
-            Console.WriteLine($"Mass decrypt logs written to {fullLogPath} and {logPath}.");
+            decrypter.MassDecrypt();
+            Console.WriteLine($"Mass decrypt logs written to {decrypter.Logger.FullLogPath} and {decrypter.Logger.LogPath}.");
             Console.WriteLine("Starting cascade decryption...");
             CascadeDecrypter cascade = new CascadeDecrypter();
-            cascade.CascadeDecrypt(fullCascadeLogPath, cascadeLogPath);
-            Console.WriteLine($"Cascade decrypt logs written to {fullCascadeLogPath} and {cascadeLogPath}.");
+            cascade.CascadeDecrypt();
+            Console.WriteLine($"Cascade decrypt logs written to {cascade.Logger.FullLogPath} and {cascade.Logger.LogPath}.");
         }
 
     }
