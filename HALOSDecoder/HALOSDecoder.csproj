@@ -46,6 +46,7 @@
     <Compile Include="CastleCipher.cs" />
     <Compile Include="DataLoader.cs" />
     <Compile Include="DecryptResult.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MassDecrypter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
